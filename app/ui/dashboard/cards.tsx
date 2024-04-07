@@ -3,29 +3,58 @@ import {
   ClockIcon,
   UserGroupIcon,
   InboxIcon,
+  CheckIcon,
 } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
+import { fetchCardData, fetchLatestTasks } from '@/app/lib/data';
 
 const iconMap = {
-  collected: BanknotesIcon,
-  customers: UserGroupIcon,
-  pending: ClockIcon,
-  invoices: InboxIcon,
+tasks: InboxIcon,
+contacts: UserGroupIcon, 
+pending: ClockIcon,
+collected: CheckIcon, 
+requested: ClockIcon,
+started: ClockIcon,
+not_started: ClockIcon,
+in_progress: ClockIcon,
+paused: ClockIcon,
+needs_review: ClockIcon, 
+reviewed: ClockIcon,
+completed: CheckIcon,
 };
 
 export default async function CardWrapper() {
+  const latestTasks = await fetchLatestTasks();
+  const {
+    numberOfTasks,
+    numberOfContacts,
+    totalRequestedTasks,
+    totalStartedTasks,
+    totalNotStartedTasks,
+    totalInProgressTasks,
+    totalPausedTasks,
+    totalNeedsReviewTasks,
+    totalReviewedTasks,
+    totalCompletedTasks,
+  } = await fetchCardData();
   return (
     <>
       {/* NOTE: comment in this code when you get to this point in the course */}
 
-      {/* <Card title="Collected" value={totalPaidInvoices} type="collected" />
-      <Card title="Pending" value={totalPendingInvoices} type="pending" />
-      <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
-      <Card
-        title="Total Customers"
-        value={numberOfCustomers}
-        type="customers"
-      /> */}
+      <Card title="Collected" value={totalCompletedTasks} type="collected" />
+        <Card title="Total Started Tasks" value={totalStartedTasks} type="started" />
+        <Card title="Total Requested Tasks" value={totalRequestedTasks} type="requested" />
+        <Card title="Total Not Started Tasks" value={totalNotStartedTasks} type="not_started" />
+        <Card title="Total Paused Tasks" value={totalPausedTasks} type="paused" />
+        <Card title="Total In Progress Tasks" value={totalInProgressTasks} type="in_progress" />
+        <Card title="Total Needs Review Tasks" value={totalNeedsReviewTasks} type="needs_review" />
+        <Card title="Total Reviewed Tasks" value={totalReviewedTasks} type="reviewed" />
+        <Card title="Total Tasks" value={numberOfTasks} type="tasks" />
+        <Card
+          title="Total Contacts"
+          value={numberOfContacts}
+          type="contacts"
+        />
     </>
   );
 }
@@ -37,7 +66,7 @@ export function Card({
 }: {
   title: string;
   value: number | string;
-  type: 'invoices' | 'customers' | 'pending' | 'collected';
+  type: 'tasks' | 'contacts' | 'pending' | 'collected' |'requested' | 'started' | 'not_started'| 'in_progress' | 'paused' | 'needs_review' | 'reviewed' | 'completed';
 }) {
   const Icon = iconMap[type];
 

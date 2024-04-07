@@ -9,80 +9,104 @@ export type User = {
   password: string;
 };
 
-export type Customer = {
+export type Contact = {
   id: string;
   name: string;
   email: string;
   image_url: string;
 };
 
-export type Invoice = {
+export type Task = {
   id: string;
-  customer_id: string;
-  amount: number;
+  contact_id: string;
+  priority: string;
   date: string;
+  description: string;
   // In TypeScript, this is called a string union type.
   // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
-  status: 'pending' | 'paid';
+  status: 'requested' | 'started' | 'not_started'| 'in_progress' | 'paused' | 'needs_review' | 'reviewed' | 'completed';
 };
 
-export type Revenue = {
+export type Contracts = {
   month: string;
-  revenue: number;
+  contracts: number;
 };
 
-export type LatestInvoice = {
+export type LatestTask = {
   id: string;
   name: string;
   image_url: string;
   email: string;
-  amount: string;
+  priority: string;
 };
 
 // The database returns a number for amount, but we later format it to a string with the formatCurrency function
-export type LatestInvoiceRaw = Omit<LatestInvoice, 'amount'> & {
-  amount: number;
+export type LatestTaskRaw = Omit<LatestTask, 'priority'> & {
+  priority: string;
 };
 
-export type InvoicesTable = {
+export type TasksTable = {
   id: string;
-  customer_id: string;
+  contact_id: string;
   name: string;
   email: string;
   image_url: string;
   date: string;
-  amount: number;
-  status: 'pending' | 'paid';
+  description: string;
+  priority: string;
+  status: 'requested' | 'started' | 'not started'| 'in progress' | 'paused' | 'needs review' | 'reviewed' | 'completed';
 };
 
-export type CustomersTableType = {
+export type ContactsTableType = {
   id: string;
   name: string;
   email: string;
   image_url: string;
-  total_invoices: number;
-  total_pending: number;
-  total_paid: number;
+  total_tasks: number;
+  total_requested: number;
+  total_started: number;
+  total_not_started: number;
+  total_in_progress: number;
+  total_paused: number;
+  total_needs_review: number;
+  total_reviewed: number;
+  total_completed: number;
 };
 
-export type FormattedCustomersTable = {
+export type FormattedContactsTable = {
   id: string;
   name: string;
   email: string;
   image_url: string;
-  total_invoices: number;
-  total_pending: string;
-  total_paid: string;
+  total_tasks: number;
+  total_requested: number;
+  total_started: number;
+  total_not_started: number;
+  total_in_progress: number;
+  total_paused: number;
+  total_needs_review: number;
+  total_reviewed: number;
+  total_completed: number;
 };
 
-export type CustomerField = {
+export type ContactField = {
   id: string;
   name: string;
 };
 
-export type InvoiceForm = {
+export type TaskForm = {
   id: string;
-  customer_id: string;
-  amount: number;
-  status: 'pending' | 'paid';
+  contact_id: string;
+  priority: string;
+  description: string;
+  status: 'requested' | 'started' | 'not started'| 'in progress' | 'paused' | 'needs review' | 'reviewed' | 'completed';
+  total_tasks: number;
+  total_requested: number;
+  total_started: number;
+  total_not_started: number;
+  total_in_progress: number;
+  total_paused: number;
+  total_needs_review: number;
+  total_reviewed: number;
+  total_completed: number;
 };
