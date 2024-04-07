@@ -89,9 +89,9 @@ export async function fetchCardData() {
     const totalInProgressTasks = formatPriorityAmount(
       data[2].rows[0].in_progress.count ?? '0',
     );
-    const totalPausedTasks = formatPriorityAmount(data[2].rows[0].needs_review.count ?? '0');
-    const totalNeedsReviewTasks = formatPriorityAmount(data[2].rows[0].reviewed.count ?? '0');
-    const totalReviewedTasks = formatPriorityAmount(data[2].rows[0].paid.count ?? '0');
+    const totalPausedTasks = formatPriorityAmount(data[2].rows[0].paused.count ?? '0');
+    const totalNeedsReviewTasks = formatPriorityAmount(data[2].rows[0].needs_review.count ?? '0');
+    const totalReviewedTasks = formatPriorityAmount(data[2].rows[0].reviewed.count ?? '0');
     const totalCompletedTasks = formatPriorityAmount(data[2].rows[0].completed.count ?? '0');
 
     return {
