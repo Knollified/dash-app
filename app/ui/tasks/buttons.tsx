@@ -16,7 +16,7 @@ export function CreateTask() {
 export function UpdateTask({ id }: { id: string }) {
   return (
     <Link
-      href="/dashboard/tasks"
+      href={`/dashboard/tasks/${id}/edit`}
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <PencilIcon className="w-5" />

@@ -1,12 +1,14 @@
 import { Contracts } from './definitions';
 
 export const formatPriority = (priority: string) => {
-  return (`${priority}`)
+  return (priority)
   
 };
 
-export const formatPriorityAmount = (PriorityAmount: number) => {
-  return (PriorityAmount)
+export const formatPriorityAmount = (priorityAmount: number) => {
+  return (priorityAmount.toLocaleString('en-US', {
+    style:'decimal',
+  }))
 };
 
 export const formatDateToLocal = (
@@ -28,10 +30,10 @@ export const generateYAxis = (contracts: Contracts[]) => {
   // based on highest record and in 1000s
   const yAxisLabels = [];
   const highestRecord = Math.max(...contracts.map((month) => month.contracts));
-  const topLabel = Math.ceil(highestRecord / 1000) * 1000;
+  const topLabel = Math.ceil(highestRecord * 1) * 1;
 
-  for (let i = topLabel; i >= 0; i -= 1000) {
-    yAxisLabels.push(`$${i / 1000}K`);
+  for (let i = topLabel; i >= 0; i -= 1) {
+    yAxisLabels.push(`${i * 1}`);
   }
 
   return { yAxisLabels, topLabel };

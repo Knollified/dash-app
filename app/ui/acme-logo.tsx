@@ -6,7 +6,7 @@ export default function AcmeLogo() {
     <div
       className={`${lusitana.className} flex flex-row items-center leading-none text-white`}
     >
-      <EllipsisHorizontalCircleIcon className="h-15 w-15 rotate-[30deg]" />
+      <EllipsisHorizontalCircleIcon className="h-14 w-15 rotate-[15deg] lg:h-32 lg:w-30" />
       <p className="text-[20px]">Central Nullify Solutions</p>
     </div>
   );

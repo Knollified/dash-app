@@ -63,14 +63,15 @@ export async function fetchCardData() {
     const taskCountPromise = sql`SELECT COUNT(*) FROM tasks`;
     const contactCountPromise = sql`SELECT COUNT(*) FROM contacts`;
     const taskStatusPromise = sql`SELECT
-    COUNT(CASE WHEN status = 'requested' THEN 1 END) AS "requested",
-    COUNT(CASE WHEN status = 'started' THEN 1 END) AS "started",
-    COUNT(CASE WHEN status = 'not started' THEN 1 END) AS "not_started",
-    COUNT(CASE WHEN status = 'in progress' THEN 1 END) AS "in_progress",
-    COUNT(CASE WHEN status = 'paused' THEN 1 END) AS "paused",
-    COUNT(CASE WHEN status = 'needs review' THEN 1 END) AS "needs_review",
-    COUNT(CASE WHEN status = 'reviewed' THEN 1 END) AS "reviewed",
-    COUNT(CASE WHEN status = 'completed' THEN 1 END) AS "completed"
+    SUM(CASE WHEN status = 'requested' THEN 1 ELSE 0 END) AS "total_requested",
+    SUM(CASE WHEN status = 'started' THEN 1 ELSE 0 END) AS "total_started",
+    SUM(CASE WHEN status = 'not_started' THEN 1 ELSE 0 END) AS "total_not_started",
+    SUM(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END) AS "total_in_progress",
+    SUM(CASE WHEN status = 'paused' THEN 1 ELSE 0 END) AS "total_paused",
+    SUM(CASE WHEN status = 'needs_review' THEN 1 ELSE 0 END) AS "total_needs_review",
+    SUM(CASE WHEN status = 'reviewed' THEN 1 ELSE 0 END) AS "total_reviewed",
+    SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS "total_completed"
+
     FROM tasks;`;
 
     const data = await Promise.all([
@@ -81,18 +82,18 @@ export async function fetchCardData() {
 
     const numberOfTasks = Number(data[0].rows[0].count ?? '0');
     const numberOfContacts = Number(data[1].rows[0].count ?? '0');
-    const totalRequestedTasks = formatPriorityAmount(data[2].rows[0].requested.count ?? '0');
-    const totalStartedTasks = formatPriorityAmount(data[2].rows[0].started.count ?? '0');
-    const totalNotStartedTasks = formatPriorityAmount(
-      data[2].rows[0].not_started.count ?? '0',
+    const totalRequestedTasks = Number(data[2].rows[0].total_requested ?? '0');
+    const totalStartedTasks = Number(data[2].rows[0].total_started ?? '0');
+    const totalNotStartedTasks = Number(
+      data[2].rows[0].total_not_started ?? '0',
     );
-    const totalInProgressTasks = formatPriorityAmount(
-      data[2].rows[0].in_progress.count ?? '0',
+    const totalInProgressTasks = Number(
+      data[2].rows[0].total_in_progress ?? '0',
     );
-    const totalPausedTasks = formatPriorityAmount(data[2].rows[0].paused.count ?? '0');
-    const totalNeedsReviewTasks = formatPriorityAmount(data[2].rows[0].needs_review.count ?? '0');
-    const totalReviewedTasks = formatPriorityAmount(data[2].rows[0].reviewed.count ?? '0');
-    const totalCompletedTasks = formatPriorityAmount(data[2].rows[0].completed.count ?? '0');
+    const totalPausedTasks = Number(data[2].rows[0].total_paused ?? '0');
+    const totalNeedsReviewTasks = Number(data[2].rows[0].total_needs_review ?? '0');
+    const totalReviewedTasks = Number(data[2].rows[0].total_reviewed ?? '0');
+    const totalCompletedTasks = Number(data[2].rows[0].total_completed ?? '0');
 
     return {
       numberOfTasks,
@@ -117,6 +118,7 @@ export async function fetchFilteredTasks(query: string, currentPage: number) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
+    noStore()
     const tasks = await sql<TasksTable>`
       SELECT
         tasks.id,
@@ -146,6 +148,7 @@ export async function fetchFilteredTasks(query: string, currentPage: number) {
 }
 
 export async function fetchTasksPages(query: string) {
+  noStore()
   try {
     const count = await sql`SELECT COUNT(*)
     FROM tasks
@@ -167,6 +170,7 @@ export async function fetchTasksPages(query: string) {
 }
 
 export async function fetchTaskById(id: string) {
+  noStore()
   try {
     const data = await sql<TaskForm>`
       SELECT
@@ -218,14 +222,14 @@ export async function fetchFilteredContacts(query: string) {
 		  contacts.email,
 		  contacts.image_url,
 		  COUNT(tasks.id) AS total_tasks,
-		  COUNT(CASE WHEN status = 'requested' THEN 1 END) AS "requested",
-      COUNT(CASE WHEN status = 'started' THEN 1 END) AS "started",
-      COUNT(CASE WHEN status = 'not started' THEN 1 END) AS "not_started",
-      COUNT(CASE WHEN status = 'in progress' THEN 1 END) AS "in_progress",
-      COUNT(CASE WHEN status = 'paused' THEN 1 END) AS "paused",
-      COUNT(CASE WHEN status = 'needs review' THEN 1 END) AS "needs_review",
-      COUNT(CASE WHEN status = 'reviewed' THEN 1 END) AS "reviewed",
-      COUNT(CASE WHEN status = 'completed' THEN 1 END) AS "completed"
+		  COUNT(CASE WHEN status = 'requested' THEN 1 END) AS "total_requested",
+      COUNT(CASE WHEN status = 'started' THEN 1 END) AS "total_started",
+      COUNT(CASE WHEN status = 'not_started' THEN 1 END) AS "total_not_started",
+      COUNT(CASE WHEN status = 'in_progress' THEN 1 END) AS "total_in_progress",
+      COUNT(CASE WHEN status = 'paused' THEN 1 END) AS "total_paused",
+      COUNT(CASE WHEN status = 'needs_review' THEN 1 END) AS "total_needs_review",
+      COUNT(CASE WHEN status = 'reviewed' THEN 1 END) AS "total_reviewed",
+      COUNT(CASE WHEN status = 'completed' THEN 1 END) AS "total_completed"
 		FROM contacts
 		LEFT JOIN tasks ON contacts.id = tasks.contact_id
 		WHERE
@@ -237,14 +241,14 @@ export async function fetchFilteredContacts(query: string) {
 
     const contacts = data.rows.map((contact) => ({
       ...contact,
-      total_requested: formatPriorityAmount(contact.total_requested),
-      total_started: formatPriorityAmount(contact.total_started),
-      total_not_started: formatPriorityAmount(contact.total_not_started),
-      total_in_progress: formatPriorityAmount(contact.total_in_progress),
-      total_paused: formatPriorityAmount(contact.total_paused),
-      total_needs_review: formatPriorityAmount(contact.total_needs_review),
-      total_reviewed: formatPriorityAmount(contact.total_reviewed),
-      total_completed: formatPriorityAmount(contact.total_completed),
+      total_requested: Number(contact.total_requested),
+      total_started: Number(contact.total_started),
+      total_not_started: Number(contact.total_not_started),
+      total_in_progress: Number(contact.total_in_progress),
+      total_paused: Number(contact.total_paused),
+      total_needs_review: Number(contact.total_needs_review),
+      total_reviewed: Number(contact.total_reviewed),
+      total_completed: Number(contact.total_completed),
     }));
 
     return contacts;

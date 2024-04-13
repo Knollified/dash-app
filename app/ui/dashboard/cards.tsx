@@ -40,8 +40,7 @@ export default async function CardWrapper() {
   return (
     <>
       {/* NOTE: comment in this code when you get to this point in the course */}
-
-      <Card title="Collected" value={totalCompletedTasks} type="collected" />
+        <Card title="Completed Tasks" value={totalCompletedTasks} type='completed'/>
         <Card title="Total Started Tasks" value={totalStartedTasks} type="started" />
         <Card title="Total Requested Tasks" value={totalRequestedTasks} type="requested" />
         <Card title="Total Not Started Tasks" value={totalNotStartedTasks} type="not_started" />
@@ -66,7 +65,7 @@ export function Card({
 }: {
   title: string;
   value: number | string;
-  type: 'tasks' | 'contacts' | 'pending' | 'collected' |'requested' | 'started' | 'not_started'| 'in_progress' | 'paused' | 'needs_review' | 'reviewed' | 'completed';
+  type: 'tasks' | 'contacts' |'requested' | 'started' | 'not_started'| 'in_progress' | 'paused' | 'needs_review' | 'reviewed' | 'completed';
 }) {
   const Icon = iconMap[type];
 

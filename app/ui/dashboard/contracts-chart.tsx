@@ -1,7 +1,7 @@
 import { generateYAxis } from '@/app/lib/utils';
 import { CalendarIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
-import { Contracts } from '@/app/lib/definitions';
+import { fetchContracts } from '@/app/lib/data';
 
 // This component is representational only.
 // For data visualization UI, check out:
@@ -9,11 +9,8 @@ import { Contracts } from '@/app/lib/definitions';
 // https://www.chartjs.org/
 // https://airbnb.io/visx/
 
-export default async function ContractsChart({
-  contracts,
-}: {
-  contracts: Contracts[];
-}) {
+export default async function ContractsChart() {
+  const contracts = await fetchContracts();
   const chartHeight = 350;
   // NOTE: comment in this code when you get to this point in the course
 

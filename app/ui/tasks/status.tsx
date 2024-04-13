@@ -9,10 +9,10 @@ export default function TaskStatus({ status }: { status: string }) {
         {
           'bg-gray-400 text-white-500': status === 'requested',
           'bg-cyan-400 text-white': status === 'started',
-          'bg-orange-400 text-whit-500': status === 'not started',
-          'bg-blue-400 text-white': status === 'in progress',
+          'bg-orange-400 text-whit-500': status === 'not_started',
+          'bg-blue-400 text-white': status === 'in_progress',
           'bg-yellow-400 text-white-500': status === 'paused',
-          'bg-red-400 text-white': status === 'needs review',
+          'bg-red-400 text-white': status === 'needs_review',
           'bg-purple-400 text-white-500': status === 'reviewed',
           'bg-green-500 text-white': status === 'completed',
         },
@@ -30,13 +30,13 @@ export default function TaskStatus({ status }: { status: string }) {
           <BookOpenIcon className="ml-1 w-4 text-white-500" />
         </>
       ) : null}
-      {status === 'not started' ? (
+      {status === 'not_started' ? (
         <>
           Not Started
           <StopIcon className="ml-1 w-4 text-white-500" />
         </>
       ) : null}
-      {status === 'in progress' ? (
+      {status === 'in_progress' ? (
         <>
           In Progress
           <ClockIcon className="ml-1 w-4 text-white-500" />
@@ -48,7 +48,7 @@ export default function TaskStatus({ status }: { status: string }) {
           <PauseIcon className="ml-1 w-4 text-white-500" />
         </>
       ) : null}
-      {status === 'needs review' ? (
+      {status === 'needs_review' ? (
         <>
           Needs Review
           <EyeIcon className="ml-1 w-4 text-white-500" />
